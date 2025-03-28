@@ -53,6 +53,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <templating-maven-plugin.version>3.0.0</templating-maven-plugin.version>
         <builder-helper-maven-plugin.version>3.6.0</builder-helper-maven-plugin.version>
+         <!-- Gitflow Maven Plugin-->
+        <gitflow-maven-plugin.version>1.16.0</gitflow-maven-plugin.version>
     </properties>
 
    <build> 
@@ -68,8 +70,26 @@
                     <artifactId>build-helper-maven-plugin</artifactId>
                     <version>${builder-helper-maven-plugin.version}</version>
                 </plugin>
+                <!-- Gitflow Maven Plugin-->
+                <plugin>
+                    <groupId>com.amashchenko.maven.plugin</groupId>
+                    <artifactId>gitflow-maven-plugin</artifactId>
+                    <version>${gitflow-maven-plugin.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
+
+        <plugins>
+             <plugin>
+                <groupId>com.amashchenko.maven.plugin</groupId>
+                <artifactId>gitflow-maven-plugin</artifactId>
+                <version>1.16.0</version>
+                <configuration>
+                    <!-- Example configuration -->
+                    <tagPrefix>${project.name}-v</tagPrefix>
+                </configuration>
+            </plugin>
+        </plugins>
    </build>
 
    
