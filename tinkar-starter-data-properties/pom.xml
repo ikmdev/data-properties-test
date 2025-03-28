@@ -7,10 +7,10 @@
     <parent>
         <groupId>dev.ikm.maven.tinkar</groupId>
         <artifactId>data-properties-test-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
 
-    <artifactId>tinkar-starter-data-properties</artifactId>
+    <artifactId>tinkar-starter-data-test-properties</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
