@@ -64,6 +64,7 @@ jobs:
         id: getCurrentVersion
         run: |
           CURRENT_VERSION=$(mvn help:evaluate -D'expression=project.version' -q -D'forceStdout')
+          echo $CURRENT_VERSION
           echo $CURRENT_VERSION | cut -d'-' -f1
           exit 1
 
