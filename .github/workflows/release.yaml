@@ -60,10 +60,17 @@ jobs:
         with:
           token: ${{secrets.IKMDEVOPS_PAT_TOKEN}}
 
+      - name: Get Current Version
+        id: getCurrentVersion
+        run: |
+          echo CURRENT_VERSION=$(mvn help:evaluate -D'expression=project.version' -q -D'forceStdout') >> $GITHUB_OUTPUT
+          echo $CURRENT_VERSION | cut -d'-' -f1
+          exit 1
+
       - name: Shared Release Action
         uses: ikmdev/maven-semver-release-action@v2.3.0
         with:
           version_type: ${{ github.event.inputs.version_type }}
           github_token: ${{secrets.GITHUB_TOKEN}}
           release_version: ${{ github.event.inputs.release_version }}
-          mvn_additional_args: -Dproject.name=${{inputs.modules}}
+          mvn_additional_args: -DtagName=${{inputs.modules}}-v${{inputs.release_version || }}
