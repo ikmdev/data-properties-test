@@ -54,7 +54,7 @@
         <templating-maven-plugin.version>3.0.0</templating-maven-plugin.version>
         <builder-helper-maven-plugin.version>3.6.0</builder-helper-maven-plugin.version>
          <!-- Gitflow Maven Plugin-->
-        <gitflow-maven-plugin.version>1.16.0</gitflow-maven-plugin.version>
+        <gitflow-maven-plugin.version>1.21.1-r4</gitflow-maven-plugin.version>
     </properties>
 
    <build> 
@@ -72,7 +72,7 @@
                 </plugin>
                 <!-- Gitflow Maven Plugin-->
                 <plugin>
-                    <groupId>com.amashchenko.maven.plugin</groupId>
+                    <groupId>dev.ikm</groupId>
                     <artifactId>gitflow-maven-plugin</artifactId>
                     <version>${gitflow-maven-plugin.version}</version>
                 </plugin>
@@ -81,7 +81,7 @@
 
         <plugins>
              <plugin>
-                <groupId>com.amashchenko.maven.plugin</groupId>
+                <groupId>dev.ikm</groupId>
                 <artifactId>gitflow-maven-plugin</artifactId>
                 <configuration>
                     <!-- Example configuration -->
