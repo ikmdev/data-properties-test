@@ -63,14 +63,15 @@ jobs:
       - name: Get Current Version
         id: getCurrentVersion
         run: |
-          echo CURRENT_VERSION=$(mvn help:evaluate -D'expression=project.version' -q -D'forceStdout') >> $GITHUB_OUTPUT
+          echo "CURRENT_VERSION=$(mvn help:evaluate -D'expression=project.version' -q -D'forceStdout')" >> $GITHUB_OUTPUT
          
-      - uses: jungwinter/split@master
+      - name: Split version code
+        uses: xom9ikk/split@v1.1
         id: getVersionNumber
         with:
-            msg: ${{ steps.getCurrentVersion.outputs.CURRENT_VERSION }}
-            separator: "-"
-            maxsplit: -1
+            string: ${{steps.getCurrentVersion.outputs.CURRENT_VERSION}}
+            separator: '-'
+            limit: -1
 
       - name: Shared Release Action
         uses: ikmdev/maven-semver-release-action@v2.3.0
