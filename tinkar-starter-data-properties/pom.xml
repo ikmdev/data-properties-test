@@ -8,6 +8,7 @@
         <groupId>dev.ikm.maven.tinkar</groupId>
         <artifactId>data-properties-test-parent</artifactId>
         <version>1.0.0</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>tinkar-starter-data-test-properties</artifactId>
