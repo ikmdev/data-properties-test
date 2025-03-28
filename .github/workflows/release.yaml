@@ -73,4 +73,4 @@ jobs:
           version_type: ${{ github.event.inputs.version_type }}
           github_token: ${{secrets.GITHUB_TOKEN}}
           release_version: ${{ github.event.inputs.release_version }}
-          mvn_additional_args: -DtagName=${{inputs.modules}}-v${{inputs.release_version || }}
+          mvn_additional_args: -DtagName=${{inputs.modules}}-v${{inputs.release_version || steps.getCurrentVersion.outputs.CURRENT_VERSION}}
