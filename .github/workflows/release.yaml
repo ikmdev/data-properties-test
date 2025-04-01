@@ -60,11 +60,55 @@ jobs:
         with:
           token: ${{secrets.IKMDEVOPS_PAT_TOKEN}}
       
-      - run: pwd; exit 1;
+      # - run: pwd; exit 1;
 
-      - name: Shared Release Action
-        uses: ikmdev/maven-semver-release-action@v2.3.0
-        with:
-          version_type: ${{ github.event.inputs.version_type }}
-          github_token: ${{secrets.GITHUB_TOKEN}}
-          release_version: ${{ github.event.inputs.release_version }}
+      # - name: Shared Release Action
+      #   uses: ikmdev/maven-semver-release-action@v2.3.0
+      #   with:
+      #     version_type: ${{ github.event.inputs.version_type }}
+      #     github_token: ${{secrets.GITHUB_TOKEN}}
+      #     release_version: ${{ github.event.inputs.release_version }}
+
+      - name: Configure Version Type
+        id: configure_version_type
+        shell: bash
+        run: |
+         if [ $RELEASE_TYPE == 'major' ]; then 
+          echo "version_type=0" >> $GITHUB_OUTPUT
+         elif [ $RELEASE_TYPE == 'minor' ]; then
+          echo "version_type=1" >> $GITHUB_OUTPUT
+         elif [ $RELEASE_TYPE == 'patch' ]; then
+          echo "version_type=2" >> $GITHUB_OUTPUT
+         elif [ $RELEASE_TYPE == 'pre-release' ]; then
+          echo "version_type=3" >> $GITHUB_OUTPUT
+         else
+          echo "ERROR: Invalid version_type '${{ inputs.version_type }}'."
+          exit 1
+         fi
+        env:
+          RELEASE_TYPE: ${{inputs.version_type}}
+
+
+      - name: Setup Git User
+        run: |
+          git config user.name "ikmdevops"
+          git config user.email ${{ inputs.ikmdevops_email }}
+
+
+      - name: GitFlow Release
+        id: gitflow_release
+        run: |
+          ./mvnw gitflow:release \
+                --batch-mode \
+                -X \
+                -Dverbose=true \
+                -DreleaseVersion=${{ inputs.release_version }} \
+                -DversionDigitToIncrement=${{ steps.configure_version_type.outputs.version_type }} \
+                -DdevelopmentVersion=${{ inputs.development_version }} \
+                -DpostReleaseGoals="clean install \
+                      --batch-mode \
+                      -e \
+                      -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
+                      -PcodeQuality,release-enforcement \
+                      -PgenerateData \
+                      -Dmaven.build.cache.enabled=false \
