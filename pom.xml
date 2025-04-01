@@ -75,25 +75,16 @@
                     <groupId>dev.ikm</groupId>
                     <artifactId>gitflow-maven-plugin</artifactId>
                     <version>${gitflow-maven-plugin.version}</version>
+                    <configuration>
+                        <gitFlowConfig>
+                            <versionTagPrefix>${project.artifactId}-v</versionTagPrefix>
+                        </gitFlowConfig>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
-
-        <plugins>
-        <!-- Example configuration -->
-             <plugin>
-                <groupId>dev.ikm</groupId>
-                <artifactId>gitflow-maven-plugin</artifactId>
-                <configuration>
-                   <gitFlowConfig>
-                        <versionTagPrefix>test-v</versionTagPrefix>
-                   </gitFlowConfig>
-                </configuration>
-            </plugin>
-        </plugins>
    </build>
 
-   
     
     <profiles>
         <profile>
