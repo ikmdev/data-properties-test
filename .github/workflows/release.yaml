@@ -98,7 +98,7 @@ jobs:
       - name: GitFlow Release
         id: gitflow_release
         run: |
-          ./mvnw gitflow:release \
+          .././mvnw gitflow:release \
                 --batch-mode \
                 -X \
                 -Dverbose=true \
