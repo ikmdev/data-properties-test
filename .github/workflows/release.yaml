@@ -117,4 +117,5 @@ jobs:
                       -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
                       -PcodeQuality,release-enforcement \
                       -PgenerateData \
+                      -Pproperties \
                       -Dmaven.build.cache.enabled=false"
