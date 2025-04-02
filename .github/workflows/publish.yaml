@@ -31,16 +31,17 @@ jobs:
             exit 1
 
         - name: Is Tag
-          if: env.IS_TAG == 'true'
+#          if: env.IS_TAG == 'true'
           run: |
             IFS="-v"
             read -ra arr <<< "$TAG"
-            echo "Head Ref: ${{github.head_ref}}
             echo "Ref Name: ${{github.ref_name}}
-            echo "TAG: $TAG"
-            echo "${arr[0]}"g
-            VAL="${arr[0]}"
-            echo $VAL
+            for val in "${arr[@]}"
+              do "$val ${arr[@]}"
+#            echo "TAG: $TAG"
+#            echo "${arr[0]}"
+#            VAL="${arr[0]}"
+#            echo $VAL
             exit 1;
           env:
             TAG: ${{github.ref_name}}
