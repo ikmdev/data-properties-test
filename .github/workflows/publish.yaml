@@ -38,6 +38,7 @@ jobs:
             echo "Ref Name: ${{github.ref_name}}
             for val in "${arr[@]}"
               do "$val ${arr[@]}"
+            done
 #            echo "TAG: $TAG"
 #            echo "${arr[0]}"
 #            VAL="${arr[0]}"
