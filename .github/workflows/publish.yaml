@@ -42,10 +42,12 @@ jobs:
               echo "::error::Please select correct Module"
               exit 1
             fi
-            exit 1;
           env:
             TAG: "tinkar-starter-data-properties-v2.0.0"
             MODULE_CHOSEN: ${{inputs.modules}}
+
+        - name: Verify this stuff worked
+          run: echo "WE MADE IT"
 
 
     publish-properties:
