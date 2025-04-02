@@ -33,7 +33,7 @@ jobs:
         - name: Is Tag
 #          if: env.IS_TAG == 'true'
           run: |
-            IFS="-v"
+            IFS="v"
             read -ra arr <<< "$TAG"
             echo "TAG: $TAG"
             for val in "${arr[@]}"
