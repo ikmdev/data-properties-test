@@ -40,9 +40,6 @@ jobs:
               do 
                 echo "$val ${arr[val]}
             done
-#            echo "${arr[0]}"
-#            VAL="${arr[0]}"
-#            echo $VAL
             exit 1;
           env:
             TAG: "tinkar-starter-data-properties-v2.0.0"
