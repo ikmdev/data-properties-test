@@ -39,7 +39,7 @@ jobs:
             echo $VAL
             exit 1;
           env:
-            TAG: ${{github.head_ref}}
+            TAG: ${{github.ref_name}}
 
 
     publish-properties:
