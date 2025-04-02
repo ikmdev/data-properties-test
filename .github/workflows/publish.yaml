@@ -38,7 +38,7 @@ jobs:
             echo "TAG: $TAG"
             for val in "${arr[@]}"
               do 
-                echo "$val ${arr[val]}
+                echo "$val ${arr[val]}"
             done
             exit 1;
           env:
