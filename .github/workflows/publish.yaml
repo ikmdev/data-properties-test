@@ -31,13 +31,13 @@ jobs:
             exit 1
 
         - name: Is Tag
-#          if: env.IS_TAG == 'true'
           run: |
             IFS="-v"
             read -ra arr <<< "$TAG"
             echo "Ref Name: ${{github.ref_name}}
             for val in "${arr[@]}"
-              do "$val ${arr[@]}"
+              do 
+                 echo "$val ${arr[@]}"
             done
 #            echo "TAG: $TAG"
 #            echo "${arr[0]}"
