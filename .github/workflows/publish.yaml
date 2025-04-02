@@ -1,6 +1,6 @@
 name: Publish Properties
 
-run-name: Publish Properties -- ${{github.head_ref || github.ref_name}}
+run-name: Publish Properties -- ${{github.head_ref || github.ref_name}} -- ${{inputs.modules}}
 
 on:
     workflow_dispatch:
@@ -17,10 +17,34 @@ on:
 
 env:
     MODULE: ${{inputs.modules == 'data-properties' && '.' || inputs.modules}}
+    IS_TAG: ${{contains(github.ref_type, 'tag')}}
 
 jobs:
+    tag_selection_verification:
+      name: Tag Selection Verification
+      runs-on: ubuntu-24.04
+      steps:
+        - name: Fail if -- SELECT --
+          if: env.MODULE == '-- SELECT --'
+          run: |
+            echo "::error::ERROR: Please pick a correct module from the selection"
+            exit 1
+
+        - name: Is Tag
+          if: env.IS_TAG == 'true'
+          run: |
+            IFS="-"
+            read -ra arr <<< "$TAG"
+            VAL="${arr[0]}"
+            echo $VAL
+            exit 1;
+          env:
+            TAG: ${{github.head_ref}}
+
+
     publish-properties:
         name: Publish Properties
+        needs: tag_selection_verification
         runs-on: ubuntu-24.04
         steps:
             - name: Checkout Repo
@@ -50,21 +74,6 @@ jobs:
                  fi
               working-directory: ${{env.MODULE}}
 
-            - name: Check For Tag
-              if: steps.version_verification.outputs.NEXUS_REPO_ID == 'maven-releases'
-              id: is_tag
-              shell: bash
-              run: |
-                if git show-ref --tags --verify --quiet "refs/tags/${TAG_NAME}"; then
-                   echo "Tag ${TAG_NAME} exists"
-                 else
-                   echo "Tag ${TAG_NAME} does not exist"
-                   echo "::error::Please Make Tag In The Following Format -- *<module-name>-<version-number>*"
-                   exit
-                 fi
-              env:
-                TAG_NAME: ${{ steps.version_verification.outputs.CURRENT_VERSION}}
-
             
             - name: Maven Settings File
               uses: whelk-io/maven-settings-xml-action@v22
@@ -88,7 +97,6 @@ jobs:
                       # ${{ inputs.mvn_additional_args }}
               working-directory: ${{env.MODULE}}
 
-
             - name: Deploy To Nexus
               run: |
                     mvn deploy \
@@ -105,7 +113,7 @@ jobs:
 
             - name: Publish To OSSRH (Maven Central Staging)
               shell: bash
-              if: steps.version_verification.outputs.NEXUS_REPO_ID == 'maven-releases' 
+              if: env.IS_TAG == 'true'
               run: |
                      mvn deploy \
                         --batch-mode \
