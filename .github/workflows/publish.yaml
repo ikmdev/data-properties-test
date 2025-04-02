@@ -37,7 +37,7 @@ jobs:
             read -ra arr <<< "$TAG"
             echo "Head Ref: ${{github.head_ref}}
             echo "Ref Name: ${{github.ref_name}}
-            echo $TAG
+            echo "TAG: $TAG"
             echo "${arr[0]}"
             VAL="${arr[0]}"
             echo $VAL
