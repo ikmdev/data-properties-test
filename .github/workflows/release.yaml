@@ -134,7 +134,6 @@ jobs:
 
       - name: Maven Build
         run: |
-          exit 1
           mvn clean install\
             --batch-mode \
             -U \
