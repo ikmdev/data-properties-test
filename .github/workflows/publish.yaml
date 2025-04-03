@@ -20,41 +20,33 @@ env:
     IS_TAG: ${{contains(github.ref_type, 'tag')}}
 
 jobs:
-    tag_selection_verification:
-      name: Tag Selection Verification
-      runs-on: ubuntu-24.04
-      steps:
-        - name: Fail if -- SELECT --
-          if: env.MODULE == '-- SELECT --'
-          run: |
-            echo "::error::ERROR: Please pick a correct module from the selection"
-            exit 1
-
-        - name: Verify TAG Selection
-#          if: env.IS_TAG == 'true'
-          run: |
-            TAG_MODULE=$(echo "$TAG" | awk -F'-v' '{print $1}')
-            echo "TAG_MODULE: $TAG_MODULE"
-            echo "MODULE_CHOSEN: $MODULE_CHOSEN"
-            echo ""
-            if [ "$TAG_MODULE" != "$MODULE_CHOSEN" ]; then
-              echo "::error::$TAG Does Not Match $MODULE_CHOSEN"
-              echo "::error::Please select correct Module"
-              exit 1
-            fi
-          env:
-            TAG: "tinkar-starter-data-properties-v2.0.0"
-            MODULE_CHOSEN: ${{inputs.modules}}
-
-        - name: Verify this stuff worked
-          run: echo "WE MADE IT"
-
-
     publish-properties:
         name: Publish Properties
         needs: tag_selection_verification
         runs-on: ubuntu-24.04
         steps:
+            - name: Fail if -- SELECT --
+              if: env.MODULE == '-- SELECT --'
+              run: |
+                echo "::error::ERROR: Please pick a correct module from the selection"
+                exit 1
+
+            - name: Verify TAG Selection
+              if: env.IS_TAG == 'true'
+              run: |
+                TAG_MODULE=$(echo "$TAG" | awk -F'-v' '{print $1}')
+                echo "TAG_MODULE: $TAG_MODULE"
+                echo "MODULE_CHOSEN: $MODULE_CHOSEN"
+                echo ""
+                if [ "$TAG_MODULE" != "$MODULE_CHOSEN" ]; then
+                  echo "::error::$TAG Does Not Match $MODULE_CHOSEN"
+                  echo "::error::Please select correct Module"
+                  exit 1
+                fi
+              env:
+                TAG: ${{github.ref_name}}
+                MODULE_CHOSEN: ${{inputs.modules}}
+
             - name: Checkout Repo
               uses: actions/checkout@v4
               
