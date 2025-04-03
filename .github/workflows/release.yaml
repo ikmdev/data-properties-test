@@ -177,6 +177,12 @@ jobs:
 #          MAVEN_CENTRAL_TOKEN: ${{secrets.OSSRH_TOKEN_PASS}}
 #          MAVEN_GPG_PASSPHRASE: ${{secrets.GPG_PASSPHRASE}}
 
+  upload-dropdown:
+    name: Upload Dropdown
+    runs-on: ubuntu-24.04
+    if: github.repository_owner == 'ikmdev'
+    needs: release
+    steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
@@ -194,4 +200,4 @@ jobs:
             git commit -am"Updated Generate Data Pipeline With $LATEST_TAG"
             git push
         env:
-          LATEST_TAG: ${{steps.get_latest_tag.outputs.LATEST_TAG}}
+          LATEST_TAG: ${{needs.release.outputs.LATEST_TAG}}
