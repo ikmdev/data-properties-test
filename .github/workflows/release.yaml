@@ -65,6 +65,7 @@ jobs:
         with:
             distribution: 'zulu'
             java-version: 21
+            server-id: ossrh
             server-username: MAVEN_USERNAME
             server-password: MAVEN_CENTRAL_TOKEN
             gpg-private-key: ${{secrets.GPG_KEY}}
@@ -123,16 +124,6 @@ jobs:
         with:
           token: ${{secrets.IKMDEVOPS_PAT_TOKEN}}
           ref: ${{steps.get_latest_tag.outputs.LATEST_TAG}}
-
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: 21
-          server-username: MAVEN_USERNAME
-          server-password: MAVEN_CENTRAL_TOKEN
-          gpg-private-key: ${{secrets.GPG_KEY}}
-          gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Maven Settings File
         uses: whelk-io/maven-settings-xml-action@v22
