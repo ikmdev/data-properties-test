@@ -194,11 +194,11 @@ jobs:
       - name: Update Dropdown
         run: |
             git pull -p
-            echo "Adding $LATEST_TAG tag to choice dropdown for users attempting to generate data"
+            echo "Adding $LATEST_TAG tag to the property version choice dropdown for users attempting to generate data"
             yq -i ".on.workflow_dispatch.inputs.properties_version.options = [\"$LATEST_TAG\"] + .on.workflow_dispatch.inputs.properties_version.options" .github/workflows/generate-pipeline-test.yaml
-            git diff -U1 | grep -E "\-\-\-|\- $LATEST_TAG" -B2 -A1 | grep -v "^--$" > add_tag_choice.patch
+            git diff -U1 | grep -E "\-\-\-|\- $LATEST_TAG" -B2 -A1 | grep -v "^--$" > add_property_version_choice.patch
             git restore .
-            git apply add_tag_choice.patch
+            git apply add_property_version_choice.patch
             git commit -am"Updated Generate Data Pipeline With $LATEST_TAG"
             git push
         env:
