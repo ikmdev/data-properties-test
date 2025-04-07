@@ -226,5 +226,5 @@ jobs:
   #           git apply add_property_version_choice.patch
   #           git commit -am"Updated Generate Data Pipeline With $LATEST_TAG"
   #           git push
-        env:
-          LATEST_TAG: ${{needs.release.outputs.LATEST_TAG}}
+        # env:
+        #   LATEST_TAG: ${{needs.release.outputs.LATEST_TAG}}
