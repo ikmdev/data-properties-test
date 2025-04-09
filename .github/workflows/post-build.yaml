@@ -24,9 +24,6 @@ jobs:
     strategy:
       matrix:
         module: [data-properties, tinkar-example-data-properties, tinkar-starter-data-properties]
-    # defaults:
-    #   run:
-    #     working-directory: ${{matrix.module == 'data-properties' && '.' || matrix.module}}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -80,7 +77,6 @@ jobs:
         env:
           TAG: ${{ env.BRANCH_NAME }}
         working-directory: ${{matrix.module == 'data-properties' && '.' || matrix.module}}
-          # CURRENT_MODULE: ${{matrix.module}}
 
       - name: Validate If Triggered By IKMDEV
         id: triggered_by_ikm
