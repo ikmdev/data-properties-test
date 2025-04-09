@@ -114,7 +114,7 @@ jobs:
               -DskipTests \
               -DskipITs \
               -s '/home/runner/work/${{github.event.repository.name}}/${{github.event.repository.name}}/.m2/settings.xml'\
-              -DrepositoryId='${{ steps.is_tag.outputs.NEXUS_REPO_ID  }}
+              -DrepositoryId='${{ steps.is_tag.outputs.NEXUS_REPO_ID  }}'
         # working-directory: ${{env.MODULE}}
 
       - name: Publish To OSSRH (Maven Central Staging)
