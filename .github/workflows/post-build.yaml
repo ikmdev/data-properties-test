@@ -156,5 +156,5 @@ jobs:
             git commit -am"Updated Generate Data Pipeline With $LATEST_TAG"
             git push
         env:
-          LATEST_TAG:  ${{steps.get_latest_tag.outputs.LATEST_TAG}}
+          LATEST_TAG:  ${{env.BRANCH_NAME}}
 
