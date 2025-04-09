@@ -28,6 +28,7 @@ jobs:
       run:
         working-directory: ${{matrix.module == 'data-properties' && '.' || matrix.module}}
     steps:
+      - run: echo ${{ contains(env.BRANCH_NAME, matrix.module) }}
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
