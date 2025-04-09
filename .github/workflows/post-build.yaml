@@ -79,6 +79,7 @@ jobs:
           fi
         env:
           TAG: ${{ env.BRANCH_NAME }}
+        working-directory: ${{matrix.module == 'data-properties' && '.' || matrix.module}}
           # CURRENT_MODULE: ${{matrix.module}}
 
       - name: Validate If Triggered By IKMDEV
