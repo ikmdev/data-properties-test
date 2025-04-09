@@ -99,7 +99,7 @@ jobs:
              ${{  steps.is_tag.outputs.RELEASE_ENFORCEMENT  }}
 
       - name: Deploy To Nexus
-        if: steps.is_tag.outputs.IS_TAG == 'false' || (steps.is_tag.outputs.IS_TAG == 'true' && contains(env.BRANCH_NAME, matrix.module) == 'true')
+        if: steps.is_tag.outputs.IS_TAG == 'false' || ${{ contains(env.BRANCH_NAME, matrix.module) == 'true' }}
         run: |
           mvn deploy \
               --batch-mode \
@@ -113,7 +113,7 @@ jobs:
     
 
       - name: Publish To OSSRH (Maven Central Staging)
-        if: steps.is_tag.outputs.IS_TAG == 'true' && contains(env.BRANCH_NAME, matrix.module)
+        if: steps.is_tag.outputs.IS_TAG == 'true' && ${{ contains(env.BRANCH_NAME, matrix.module) == 'true' }}
         run: |
          mvn deploy \
             --batch-mode \
@@ -135,13 +135,13 @@ jobs:
 
       - name: Checkout Repository
         uses: actions/checkout@v4
-        if: steps.is_tag.outputs.IS_TAG == 'true' && contains(env.BRANCH_NAME, matrix.module)
+        if: steps.is_tag.outputs.IS_TAG == 'true' && ${{ contains(env.BRANCH_NAME, matrix.module) == 'true' }}
         with:
           token: ${{secrets.IKMDEVOPS_PAT_TOKEN}}
           repository: ikmdev/komet_test
 
       - name: Update Dropdown
-        if: steps.is_tag.outputs.IS_TAG == 'true' && contains(env.BRANCH_NAME, matrix.module)
+        if: steps.is_tag.outputs.IS_TAG == 'true' && ${{ contains(env.BRANCH_NAME, matrix.module) == 'true' }}
         run: |
             git config user.name "ikmdevops"
             git config user.email 'devops@ikm.dev'
