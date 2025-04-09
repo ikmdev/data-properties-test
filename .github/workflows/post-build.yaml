@@ -86,11 +86,6 @@ jobs:
           active_profiles: '["nexus-profile"]' 
           output_file: .m2/settings.xml
 
-      # - name: Get Latest Tag
-      #   id: get_latest_tag
-      #   run: |
-      #     echo "LATEST_TAG=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
-
       - name: Maven Build
         run: |
           mvn clean install\
@@ -102,9 +97,9 @@ jobs:
             -PcodeQuality \
             -PgenerateData \
              ${{  steps.is_tag.outputs.RELEASE_ENFORCEMENT  }}
-        # working-directory: ${{env.MODULE}}
 
       - name: Deploy To Nexus
+        if: steps.is_tag.outputs.IS_TAG == 'false' || (steps.is_tag.outputs.IS_TAG == 'true' && ${{ contains(env.BRANCH_NAME, matrix.module) == 'true' }})
         run: |
           mvn deploy \
               --batch-mode \
@@ -137,7 +132,6 @@ jobs:
            MAVEN_USERNAME: ${{secrets.OSSRH_TOKEN_USER}}
            MAVEN_CENTRAL_TOKEN: ${{secrets.OSSRH_TOKEN_PASS}}
            MAVEN_GPG_PASSPHRASE: ${{secrets.GPG_PASSPHRASE}}
-        # working-directory: ${{env.MODULE}}
 
       - name: Checkout Repository
         uses: actions/checkout@v4
