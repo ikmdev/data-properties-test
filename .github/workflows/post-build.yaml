@@ -49,7 +49,6 @@ jobs:
       - name: Check For Tag
         id: is_tag
         run: |
-            echo "CURRENT_MODULE=$CONTAINS" >> $GITHUB_OUTPUT
             if git show-ref --tags --verify --quiet "refs/tags/${HEAD_BRANCH}"; then
                 echo "Tag ${HEAD_BRANCH} exists"
                 echo "NEXUS_REPO_ID=maven-releases">> $GITHUB_OUTPUT
@@ -63,7 +62,24 @@ jobs:
               fi
         env:
           HEAD_BRANCH: ${{ env.BRANCH_NAME }}
-          CONTAINS: ${{ contains(env.BRANCH_NAME, matrix.module) }}
+
+      - name: Check Tag & Current Module
+        id: is_current_module
+        if: steps.is_tag.outputs == 'true'
+        run: |
+          EXTRACTED_MODULE=$(echo "$TAG" | awk -F'-v' '{print $1}')
+          CURRENT_MODULE=$(mvn help:evaluate -D'expression=project.version' -q -D'forceStdout')
+          echo "TAG: $TAG"
+          echo "CURRENT_MODULE: $CURRENT_MODULE"
+          echo "EXTRACTED_MODULE: $EXTRACTED_MODULE"
+          if [ "$EXTRACTED_MODULE" == "$CURRENT_MODULE" ]; then
+            echo "TAG_MATCH_MODULE=true" >> $GITHUB_OUTPUT
+          else
+            echo "TAG_MATCH_MODULE=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          TAG: ${{ env.BRANCH_NAME }}
+          # CURRENT_MODULE: ${{matrix.module}}
 
       - name: Validate If Triggered By IKMDEV
         id: triggered_by_ikm
@@ -101,7 +117,7 @@ jobs:
              ${{  steps.is_tag.outputs.RELEASE_ENFORCEMENT  }}
 
       - name: Deploy To Nexus
-        if: steps.is_tag.outputs.IS_TAG == 'false' || steps.is_tag.outputs.CURRENT_MODULE == 'true'
+        if: steps.is_tag.outputs.IS_TAG == 'false' || steps.is_current_module.outputs.TAG_MATCH_MODULE == 'true'
         run: |
           mvn deploy \
               --batch-mode \
@@ -115,7 +131,7 @@ jobs:
     
 
       - name: Publish To OSSRH (Maven Central Staging)
-        if: steps.is_tag.outputs.IS_TAG == 'true' && steps.is_tag.outputs.CURRENT_MODULE == 'true'
+        if: steps.is_tag.outputs.IS_TAG == 'true' && steps.is_current_module.outputs.TAG_MATCH_MODULE == 'true'
         run: |
          mvn deploy \
             --batch-mode \
@@ -137,13 +153,13 @@ jobs:
 
       - name: Checkout Repository
         uses: actions/checkout@v4
-        if: steps.is_tag.outputs.IS_TAG == 'true' && steps.is_tag.outputs.CURRENT_MODULE == 'true'
+        if: steps.is_tag.outputs.IS_TAG == 'true' && steps.is_current_module.outputs.TAG_MATCH_MODULE == 'true'
         with:
           token: ${{secrets.IKMDEVOPS_PAT_TOKEN}}
           repository: ikmdev/komet_test
 
       - name: Update Dropdown
-        if: steps.is_tag.outputs.IS_TAG == 'true' && steps.is_tag.outputs.CURRENT_MODULE == 'true'
+        if: steps.is_tag.outputs.IS_TAG == 'true' && steps.is_current_module.outputs.TAG_MATCH_MODULE == 'true'
         run: |
             git config user.name "ikmdevops"
             git config user.email 'devops@ikm.dev'
