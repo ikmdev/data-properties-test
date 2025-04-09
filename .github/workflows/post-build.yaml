@@ -24,9 +24,9 @@ jobs:
     strategy:
       matrix:
         module: [data-properties, tinkar-example-data-properties, tinkar-starter-data-properties]
-    defaults:
-      run:
-        working-directory: ${{matrix.module == 'data-properties' && '.' || matrix.module}}
+    # defaults:
+    #   run:
+    #     working-directory: ${{matrix.module == 'data-properties' && '.' || matrix.module}}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -115,6 +115,7 @@ jobs:
             -PcodeQuality \
             -PgenerateData \
              ${{  steps.is_tag.outputs.RELEASE_ENFORCEMENT  }}
+        working-directory: ${{matrix.module == 'data-properties' && '.' || matrix.module}}
 
       - name: Deploy To Nexus
         if: steps.is_tag.outputs.IS_TAG == 'false' || steps.is_current_module.outputs.TAG_MATCH_MODULE == 'true'
@@ -128,6 +129,7 @@ jobs:
               -DskipITs \
               -s '/home/runner/work/${{github.event.repository.name}}/${{github.event.repository.name}}/.m2/settings.xml'\
               -DrepositoryId='${{ steps.is_tag.outputs.NEXUS_REPO_ID  }}'
+        working-directory: ${{matrix.module == 'data-properties' && '.' || matrix.module}}
     
 
       - name: Publish To OSSRH (Maven Central Staging)
@@ -150,6 +152,7 @@ jobs:
            MAVEN_USERNAME: ${{secrets.OSSRH_TOKEN_USER}}
            MAVEN_CENTRAL_TOKEN: ${{secrets.OSSRH_TOKEN_PASS}}
            MAVEN_GPG_PASSPHRASE: ${{secrets.GPG_PASSPHRASE}}
+        working-directory: ${{matrix.module == 'data-properties' && '.' || matrix.module}}
 
       - name: Checkout Repository
         uses: actions/checkout@v4
