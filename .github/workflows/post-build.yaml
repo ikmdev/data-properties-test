@@ -49,6 +49,7 @@ jobs:
       - name: Check For Tag
         id: is_tag
         run: |
+            echo "Containing: $CONTAINS"
             if git show-ref --tags --verify --quiet "refs/tags/${HEAD_BRANCH}"; then
                 echo "Tag ${HEAD_BRANCH} exists"
                 echo "NEXUS_REPO_ID=maven-releases">> $GITHUB_OUTPUT
@@ -62,6 +63,7 @@ jobs:
               fi
         env:
           HEAD_BRANCH: ${{ env.BRANCH_NAME }}
+          CONTAINS: ${{ contains(env.BRANCH_NAME, matrix.module) }}
 
       - name: Validate If Triggered By IKMDEV
         id: triggered_by_ikm
