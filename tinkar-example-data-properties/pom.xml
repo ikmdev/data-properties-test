@@ -11,7 +11,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>tinkar-example-data-test-properties</artifactId>
+    <artifactId>tinkar-example-data-properties-test</artifactId>
     <version>1.7.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
