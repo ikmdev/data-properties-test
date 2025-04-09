@@ -115,10 +115,10 @@ jobs:
               -DskipITs \
               -s '/home/runner/work/${{github.event.repository.name}}/${{github.event.repository.name}}/.m2/settings.xml'\
               -DrepositoryId='${{ steps.is_tag.outputs.NEXUS_REPO_ID  }}'
-        # working-directory: ${{env.MODULE}}
+    
 
       - name: Publish To OSSRH (Maven Central Staging)
-        if: steps.is_tag.outputs.IS_TAG == 'true'
+        if: steps.is_tag.outputs.IS_TAG == 'true' && contains(env.BRANCH_NAME, matrix.module)
         run: |
          mvn deploy \
             --batch-mode \
@@ -141,13 +141,13 @@ jobs:
 
       - name: Checkout Repository
         uses: actions/checkout@v4
-        if: steps.is_tag.outputs.IS_TAG == 'true'
+        if: steps.is_tag.outputs.IS_TAG == 'true' && contains(env.BRANCH_NAME, matrix.module)
         with:
           token: ${{secrets.IKMDEVOPS_PAT_TOKEN}}
           repository: ikmdev/komet_test
 
       - name: Update Dropdown
-        if: steps.is_tag.outputs.IS_TAG == 'true'
+        if: steps.is_tag.outputs.IS_TAG == 'true' && contains(env.BRANCH_NAME, matrix.module)
         run: |
             git config user.name "ikmdevops"
             git config user.email 'devops@ikm.dev'
