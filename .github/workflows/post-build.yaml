@@ -182,10 +182,10 @@ jobs:
        runs-on: ubuntu-24.04
        strategy:
         matrix:
-          repos: [ "${{vars.REPO_LIST}}" ]
+          repos: [tinkar-example-data, data-properties]
        steps:
         - name: Trigger Repository Dispatch
-          run: echo ${{matrix.repos}}
+          run: echo Repo ${{matrix.repos}}
           # run: |
           #   curl -X POST \
           #   -H "Accept: application/vnd.github.v3+json" \
