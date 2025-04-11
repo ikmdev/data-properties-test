@@ -15,6 +15,7 @@ permissions:
 
 env:
   BRANCH_NAME: ${{github.event.workflow_run.head_branch}}
+  REPO_LIST: "tinkar-example-data, data-properties"
 
 jobs:
   post-build:
@@ -174,3 +175,20 @@ jobs:
         env:
           LATEST_TAG:  ${{env.BRANCH_NAME}}
 
+  repository-dispatch:
+       name: Repository Dispatch
+       needs: post-build
+      #  if: needs.post-build.outputs.IS_TAG == 'true'
+       runs-on: ubuntu-24.04
+       strategy:
+        matrix:
+          repos: [ "${{vars.REPO_LIST}}" ]
+       steps:
+        - name: Trigger Repository Dispatch
+          run: echo ${{matrix.repos}}
+          # run: |
+          #   curl -X POST \
+          #   -H "Accept: application/vnd.github.v3+json" \
+          #   -H "Authorization: token ${{secrets.IKMDEVOPS_PAT_TOKEN}}" \
+          #   https://api.github.com/repos/ikmdev/${{matrix.repos}}/dispatches \
+          #   -d '{"event_type":"custom-event","client_payload":{"tag_name":"${{github.event.workflow_run.head_branch}}"}}'
