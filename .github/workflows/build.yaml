@@ -27,11 +27,7 @@ jobs:
     strategy:
       matrix:
         module: [data-properties, tinkar-example-data-properties, tinkar-starter-data-properties]
-    steps:  
-      - name: Test Repo Dispatch
-        if: github.event_name == 'repository_dispatch'
-        run: echo ${{github.event.client_payload.version}} 
-               
+    steps:            
       - name: Build IKMDEV Code
         uses: ikmdev/maven-clean-install-build-action@v3.4.0
         with:
