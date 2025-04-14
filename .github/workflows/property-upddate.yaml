@@ -1,0 +1,44 @@
+name: Update Property Workflow
+
+run-name: 'Update Property Workflow -- ${{github.event.client_payload.version}}'
+
+# Pipeline/Workflow Triggers
+on:
+    repository_dispatch:
+      types:
+        - tinkar-trigger
+
+jobs:
+    build-job:
+        name: Update Version Property
+        runs-on: ubuntu-24.04
+        if: github.event_name == 'repository_dispatch' && github.repository_owner == 'ikmdev'
+        defaults:
+            run:
+             working-directory: tinkar-example-data-properties
+        steps:  
+        - name: Checkout Repository
+          uses: actions/checkout@v4
+          with:
+            token: ${{secrets.IKMDEVOPS_PAT_TOKEN}}
+
+        - name: Setup GitHub User
+          run: |
+              git config user.name "ikmdevops"
+              git config user.email "devops@ikm.dev"
+
+        - name: Test Repo Dispatch
+          run: mvn version:set -Dinkar-starter-data.version=${{github.event.client_payload.version}} 
+
+        - name: Setup GitHub User
+          run: |
+            git config user.name "ikmdevops"
+            git config user.email "devops@ikm.dev"
+
+        - name: Push to Default branch
+          run: |
+            git pull -p;
+            git add pom.xml
+            git commit -m"Changed tinkar-starter-data.version to ${{github.event.client_payload.version}}"
+            git push
+          
