@@ -23,7 +23,7 @@ jobs:
             token: ${{secrets.IKMDEVOPS_PAT_TOKEN}}
 
         - name: Test Repo Dispatch
-          run: mvn versions:set-property -Dtinkar-starter-data.version -DnewVersion=${{github.event.client_payload.version}} 
+          run: mvn versions:set-property -Dproperty=tinkar-starter-data.version -DnewVersion=${{github.event.client_payload.version}} 
 
         - name: Push to Default branch
           run: |
