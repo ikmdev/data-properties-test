@@ -22,21 +22,13 @@ jobs:
           with:
             token: ${{secrets.IKMDEVOPS_PAT_TOKEN}}
 
-        - name: Setup GitHub User
-          run: |
-              git config user.name "ikmdevops"
-              git config user.email "devops@ikm.dev"
-
         - name: Test Repo Dispatch
-          run: mvn version:set -Dinkar-starter-data.version=${{github.event.client_payload.version}} 
-
-        - name: Setup GitHub User
-          run: |
-            git config user.name "ikmdevops"
-            git config user.email "devops@ikm.dev"
+          run: mvn version:set -Dtinkar-starter-data.version=${{github.event.client_payload.version}} 
 
         - name: Push to Default branch
           run: |
+            git config user.name "ikmdevops"
+            git config user.email "devops@ikm.dev"
             git pull -p;
             git add pom.xml
             git commit -m"Changed tinkar-starter-data.version to ${{github.event.client_payload.version}}"
