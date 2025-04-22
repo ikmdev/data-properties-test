@@ -170,12 +170,12 @@ jobs:
       - name: Repository Dispatch Call
         if: steps.is_tag.outputs.IS_TAG == 'true' && steps.is_current_module.outputs.TAG_MATCH_MODULE == 'true'
         run: |
-          echo "EXTRACT_VERSION_NUMBER Variable = ${{steps.is_tag.outputs.EXTRACTED_VERSION}}"
+          echo "EXTRACT_VERSION_NUMBER Variable = ${{steps.is_current_module.outputs.EXTRACTED_VERSION}}"
           curl -X POST \
           -H "Accept: application/vnd.github.v3+json" \
           -H "Authorization: token ${{secrets.IKMDEVOPS_PAT_TOKEN}}" \
           https://api.github.com/repos/ikmdev/${{steps.module_repo.outputs.DISPATCH_REPO}}/dispatches \
-          -d '{"event_type":"build-repository-dispatch-trigger","client_payload":{"version": "${{steps.is_tag.outputs.EXTRACTED_VERSION}}"}}'
+          -d '{"event_type":"build-repository-dispatch-trigger","client_payload":{"version": "${{steps.is_current_module.outputs.EXTRACTED_VERSION}}"}}'
         env:
           TAG: ${{env.BRANCH_NAME}}
 
