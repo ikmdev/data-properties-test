@@ -72,8 +72,7 @@ jobs:
           echo "EXTRACTED_MODULE: $EXTRACTED_MODULE"
           if [ "$EXTRACTED_MODULE" == "$CURRENT_MODULE" ]; then
             echo "TAG_MATCH_MODULE=true" >> $GITHUB_OUTPUT
-            VERSION=$(echo "$TAG" | awk -F'-v' '{print $2}')
-            echo "EXTRACTED_VERSION=$VERSION" >> $GITHUB_OUTPUT
+            echo "EXTRACTED_VERSION=$(echo "$TAG" | awk -F'-v' '{print $2}')" >> $GITHUB_OUTPUT
           else
             echo "TAG_MATCH_MODULE=false" >> $GITHUB_OUTPUT
           fi
@@ -169,7 +168,7 @@ jobs:
       - name: Repository Dispatch Call
         if: steps.is_tag.outputs.IS_TAG == 'true' && steps.is_current_module.outputs.TAG_MATCH_MODULE == 'true'
         run: |
-          echo "EXTRACT_VERSION_NUMBER Variable = $EXTRACTED_VERSION_NUMBER"
+          echo "EXTRACT_VERSION_NUMBER Variable = ${{steps.is_tag.outputs.EXTRACTED_VERSION}}"
           curl -X POST \
           -H "Accept: application/vnd.github.v3+json" \
           -H "Authorization: token ${{secrets.IKMDEVOPS_PAT_TOKEN}}" \
