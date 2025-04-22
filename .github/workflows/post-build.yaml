@@ -124,7 +124,7 @@ jobs:
             -Dmaven.build.cache.enabled=false \
             -PcodeQuality \
             -PgenerateData \
-             ${{  steps.is_tag.outputs.RELEASE_ENFORCEMENT  }}
+            ${{  steps.is_tag.outputs.IS_TAG == 'true' && steps.is_current_module.outputs.TAG_MATCH_MODULE == 'true' && steps.is_tag.outputs.RELEASE_ENFORCEMENT || '' }}
         working-directory: ${{matrix.module == 'data-properties' && '.' || matrix.module}}
 
       - name: Deploy To Nexus
