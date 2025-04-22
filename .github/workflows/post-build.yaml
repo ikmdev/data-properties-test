@@ -67,13 +67,12 @@ jobs:
         run: |
           EXTRACTED_MODULE=$(echo "$TAG" | awk -F'-v' '{print $1}')
           VERSION=$(echo "$TAG" | awk -F'-v' '{print $2}')
-          echo "EXTRACTED_VERSION=$(echo "$TAG" | awk -F'-v' '{print $2}')" >> $GITHUB_OUTPUT
+          echo "EXTRACTED_VERSION=$VERSION" >> $GITHUB_OUTPUT
           CURRENT_MODULE=$(mvn help:evaluate -D'expression=project.artifactId' -q -D'forceStdout')
           echo "TAG: $TAG"
           echo "CURRENT_MODULE: $CURRENT_MODULE"
           echo "EXTRACTED_MODULE: $EXTRACTED_MODULE"
           echo "EXTRACTED_VERSION: $VERSION"
-          exit 1
           if [ "$EXTRACTED_MODULE" == "$CURRENT_MODULE" ]; then
             echo "TAG_MATCH_MODULE=true" >> $GITHUB_OUTPUT
           else
