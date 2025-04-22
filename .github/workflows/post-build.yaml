@@ -168,12 +168,12 @@ jobs:
         if: steps.is_tag.outputs.IS_TAG == 'true' && steps.is_current_module.outputs.TAG_MATCH_MODULE == 'true'
         run: |
           EXTRACTED_VERSION_NUMBER=$(echo "$TAG" | awk -F'-v' '{print $2}')
-          echo "EXTRACT_VERSION_NUMBER = $EXTRACTED_VERSION_NUMBER"
+          echo "EXTRACT_VERSION_NUMBER Variable = $EXTRACTED_VERSION_NUMBER"
           curl -X POST \
           -H "Accept: application/vnd.github.v3+json" \
           -H "Authorization: token ${{secrets.IKMDEVOPS_PAT_TOKEN}}" \
           https://api.github.com/repos/ikmdev/${{steps.module_repo.outputs.DISPATCH_REPO}}/dispatches \
-          -d '{"event_type":"build-repository-dispatch-trigger","client_payload":{"version":$EXTRACTED_VERSION_NUMBER}}'
+          -d '{"event_type":"build-repository-dispatch-trigger","client_payload":{"version": '$EXTRACTED_VERSION_NUMBER'}}'
         env:
           TAG: ${{env.BRANCH_NAME}}
 
