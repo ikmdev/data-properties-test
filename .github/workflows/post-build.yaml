@@ -172,7 +172,7 @@ jobs:
           curl -X POST \
           -H "Accept: application/vnd.github.v3+json" \
           -H "Authorization: token ${{secrets.IKMDEVOPS_PAT_TOKEN}}" \
-          https://api.github.com/repos/ikmdev/${{matrix.module}}/dispatches \
+          https://api.github.com/repos/ikmdev/${{steps.module_repo.outputs.DISPATCH_REPO}}/dispatches \
           -d '{"event_type":"build-repository-dispatch-trigger","client_payload":{"version":"$EXTRACTED_VERSION_NUMBER"}}'
         env:
           TAG: ${{env.BRANCH_NAME}}
