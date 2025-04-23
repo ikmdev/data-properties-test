@@ -86,6 +86,8 @@ jobs:
           VERSION=$(echo "$TAG" | awk -F'-v' '{print $2}')
           echo "EXTRACTED_VERSION=$VERSION" >> $GITHUB_OUTPUT
           echo "EXTRACTED_VERSION: $VERSION"
+        env:
+          TAG: ${{ env.BRANCH_NAME }}
       
       - name: Map Module To Appropriate Repo
         id: module_repo_map
