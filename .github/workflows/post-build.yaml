@@ -94,8 +94,7 @@ jobs:
         if: steps.is_tag.outputs.IS_TAG == 'true' && steps.is_current_module.outputs.TAG_MATCH_MODULE == 'true'
         run: |
           if [ "$MODULE" == "tinkar-example-data-properties" ]; then
-            # echo "DISPATCH_REPO=tinkar-example-data" >> $GITHUB_OUTPUT
-            echo "DISPATCH_REPO=github_actions_test" >> $GITHUB_OUTPUT
+            echo "DISPATCH_REPO=tinkar-example-data-test" >> $GITHUB_OUTPUT
           fi
         env:
           MODULE: ${{matrix.module}}
@@ -182,29 +181,7 @@ jobs:
           -H "Accept: application/vnd.github.v3+json" \
           -H "Authorization: token ${{secrets.IKMDEVOPS_PAT_TOKEN}}" \
           https://api.github.com/repos/ikmdev/${{steps.module_repo_map.outputs.DISPATCH_REPO}}/dispatches \
-          -d '{"event_type":"build-repository-dispatch-trigger","client_payload":{"version": "${{steps.extract_tag_version.outputs.EXTRACTED_VERSION}}"}}'
+          -d '{"event_type":"update-repository-dispatch-trigger","client_payload":{"version": "${{steps.extract_tag_version.outputs.EXTRACTED_VERSION}}"}}'
         env:
           TAG: ${{env.BRANCH_NAME}}
 
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        if: steps.is_tag.outputs.IS_TAG == 'true' && steps.is_current_module.outputs.TAG_MATCH_MODULE == 'true'
-        with:
-          token: ${{secrets.IKMDEVOPS_PAT_TOKEN}}
-          repository: ikmdev/komet_test
-
-      - name: Update Dropdown
-        if: steps.is_tag.outputs.IS_TAG == 'true' && steps.is_current_module.outputs.TAG_MATCH_MODULE == 'true'
-        run: |
-            git config user.name "ikmdevops"
-            git config user.email 'devops@ikm.dev'
-            git pull -p
-            echo "Adding $LATEST_TAG tag to the property version choice dropdown for users attempting to generate data"
-            yq -i ".on.workflow_dispatch.inputs.properties_version.options = [\"$LATEST_TAG\"] + .on.workflow_dispatch.inputs.properties_version.options" .github/workflows/generate-pipeline-test.yaml
-            git diff -U1 | grep -E "\-\-\-|\- $LATEST_TAG" -B2 -A1 | grep -v "^--$" > add_property_version_choice.patch
-            git restore .
-            git apply add_property_version_choice.patch
-            git commit -am"Updated Generate Data Pipeline With $LATEST_TAG"
-            git push
-        env:
-          LATEST_TAG:  ${{env.BRANCH_NAME}}
